@@ -37,7 +37,7 @@ defmodule RumblWeb.UserController do
     end
 
     def authenticate(conn) do
-        if conn.assign.current_user do
+        if conn.assigns.current_user do
             conn
         else
             conn
