@@ -1,15 +1,13 @@
 defmodule RumblWeb.UserController do
     use RumblWeb, :controller
     alias Rumbl.Repo
+    alias Rumbl.Auth
+
+    plug :authenticate when action in [:index, :show]
 
     def index(conn, _params) do
-        case authenticate(conn) do
-            %Plug.Conn{halted: ture} = conn ->
-                conn
-            conn ->
-                users = Repo.all(Rumbl.User)
-                render conn, "index.html", users: users
-        end
+        users = Repo.all(Rumbl.User)
+        render conn, "index.html", users: users
     end
 
     def show(conn, %{"id" => id}) do
@@ -29,6 +27,7 @@ defmodule RumblWeb.UserController do
         case Repo.insert(changeset) do
             {:ok, user} ->
                 conn
+                |> Auth.login(user)
                 |> put_flash(:info, "#{user.name} created!")
                 |> redirect(to: user_path(conn, :index))
             {:error, changeset} ->
@@ -36,7 +35,7 @@ defmodule RumblWeb.UserController do
         end
     end
 
-    def authenticate(conn) do
+    def authenticate(conn, _opts) do
         if conn.assigns.current_user do
             conn
         else
