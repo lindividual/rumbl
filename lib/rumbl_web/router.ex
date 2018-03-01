@@ -20,10 +20,7 @@ defmodule RumblWeb.Router do
 
     get "/", PageController, :index
     resources "/users", UserController, only: [:index, :show, :new, :create]
-<<<<<<< HEAD
     resources "/videos", VideoController
-=======
->>>>>>> parent of 84d7bd2... gen video
     resources "/sessions", SessionController, only: [:new, :create, :delete]
   end
 
