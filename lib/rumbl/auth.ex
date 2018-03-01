@@ -36,8 +36,6 @@ defmodule Rumbl.Auth do
                 {:error, :not_found,conn}
         end
     end
-<<<<<<< HEAD
-<<<<<<< HEAD
     
     def logout(conn) do
         configure_session(conn, drop: true)
@@ -53,8 +51,4 @@ defmodule Rumbl.Auth do
             |> halt()
         end
     end
-=======
->>>>>>> parent of 147d2f8... complement logout feature
-=======
->>>>>>> parent of 147d2f8... complement logout feature
 end
