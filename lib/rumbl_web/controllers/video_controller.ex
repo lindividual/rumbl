@@ -1,5 +1,6 @@
 defmodule RumblWeb.VideoController do
   use RumblWeb, :controller
+  use Ecto.Repo, otp_app: :rumbl
 
   alias Rumbl.Content
   alias Rumbl.Content.Video
@@ -9,16 +10,16 @@ defmodule RumblWeb.VideoController do
     render(conn, "index.html", videos: videos)
   end
 
-  def new(conn, _params) do
+  def new(conn, _params, user) do
     # changeset = Content.change_video(%Video{})
     changeset = 
-      conn.assigns.current_user
+      user
       |> build_assoc(:videos)
       |> Content.change_video(%Video{})
       |> render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"video" => video_params}) do
+  def create(conn, %{"video" => video_params}, user) do
     case Content.create_video(video_params) do
       {:ok, video} ->
         conn
