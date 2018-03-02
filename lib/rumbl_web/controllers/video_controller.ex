@@ -5,7 +5,7 @@ defmodule RumblWeb.VideoController do
   alias Rumbl.Content
   alias Rumbl.Content.Video
 
-  def index(conn, _params) do
+  def index(conn, _params, user) do
     videos = Content.list_videos()
     render(conn, "index.html", videos: videos)
   end
@@ -15,7 +15,7 @@ defmodule RumblWeb.VideoController do
     changeset = 
       user
       |> Ecto.build_assoc(:videos)
-      |> Content.change_video(%Video{})
+      |> Content.change_video()
     render(conn, "new.html", changeset: changeset)
   end
 
