@@ -1,7 +1,7 @@
 defmodule RumblWeb.VideoController do
   use RumblWeb, :controller
-  use Ecto.Repo, otp_app: :rumbl
-
+  
+  alias Rumbl.Repo
   alias Rumbl.Content
   alias Rumbl.Content.Video
 
