@@ -8,6 +8,10 @@ defmodule Rumbl.Content do
 
   alias Rumbl.Content.Video
 
+  defp user_videos(user) do
+    Ecto.assoc(user, :videos)
+  end
+
   @doc """
   Returns the list of videos.
 
@@ -18,7 +22,7 @@ defmodule Rumbl.Content do
 
   """
   def list_videos do
-    Repo.all(Video)
+    Repo.all(use_videos(user))
   end
 
   @doc """
@@ -35,7 +39,7 @@ defmodule Rumbl.Content do
       ** (Ecto.NoResultsError)
 
   """
-  def get_video!(id), do: Repo.get!(Video, id)
+  def get_video!(videos, id), do: Repo.get!(user_videos(user), id)
 
   @doc """
   Creates a video.

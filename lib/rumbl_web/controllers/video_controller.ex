@@ -5,6 +5,10 @@ defmodule RumblWeb.VideoController do
   alias Rumbl.Content
   alias Rumbl.Content.Video
 
+  def action(conn, _) do
+    apply(__MODULE__, action_name(conn), [conn, conn.params, conn.assigns.current_user])
+  end
+
   def index(conn, _params, user) do
     videos = Content.list_videos()
     render(conn, "index.html", videos: videos)
@@ -30,18 +34,18 @@ defmodule RumblWeb.VideoController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    video = Content.get_video!(id)
+  def show(conn, %{"id" => id}, user) do
+    video = Content.get_video!(user_videos(user), id)
     render(conn, "show.html", video: video)
   end
 
-  def edit(conn, %{"id" => id}) do
+  def edit(conn, %{"id" => id}, user) do
     video = Content.get_video!(id)
     changeset = Content.change_video(video)
     render(conn, "edit.html", video: video, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "video" => video_params}) do
+  def update(conn, %{"id" => id, "video" => video_params}, user) do
     video = Content.get_video!(id)
 
     case Content.update_video(video, video_params) do
@@ -54,16 +58,12 @@ defmodule RumblWeb.VideoController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => id}, user) do
     video = Content.get_video!(id)
     {:ok, _video} = Content.delete_video(video)
 
     conn
     |> put_flash(:info, "Video deleted successfully.")
     |> redirect(to: video_path(conn, :index))
-  end
-
-  def action(conn, _) do
-    apply(__MODULE__, action_name(conn), [conn, conn.params, conn.assigns.current_user])
   end
 end
