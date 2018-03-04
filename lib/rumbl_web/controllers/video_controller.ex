@@ -19,7 +19,7 @@ defmodule RumblWeb.VideoController do
     changeset = 
       user
       |> Ecto.build_assoc(:videos)
-      |> Content.change_video(%Video{})
+      |> Content.change_video()
     render(conn, "new.html", changeset: changeset)
   end
 
@@ -48,7 +48,7 @@ defmodule RumblWeb.VideoController do
   def update(conn, %{"id" => id, "video" => video_params}, user) do
     video = Content.get_video!(id, user)
 
-    case Content.update_video(video, video_params) do
+    case Content.update_video(video, video_params, user) do
       {:ok, video} ->
         conn
         |> put_flash(:info, "Video updated successfully.")
