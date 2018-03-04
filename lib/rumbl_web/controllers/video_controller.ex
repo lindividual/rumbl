@@ -10,7 +10,7 @@ defmodule RumblWeb.VideoController do
   end
 
   def index(conn, _params, user) do
-    videos = Content.list_videos()
+    videos = Content.list_videos(user)
     render(conn, "index.html", videos: videos)
   end
 
@@ -19,12 +19,12 @@ defmodule RumblWeb.VideoController do
     changeset = 
       user
       |> Ecto.build_assoc(:videos)
-      |> Content.change_video()
+      |> Content.change_video(%Video{})
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"video" => video_params}, user) do
-    case Content.create_video(video_params) do
+    case Content.create_video(video_params, user) do
       {:ok, video} ->
         conn
         |> put_flash(:info, "Video created successfully.")
@@ -35,18 +35,18 @@ defmodule RumblWeb.VideoController do
   end
 
   def show(conn, %{"id" => id}, user) do
-    video = Content.get_video!(user_videos(user), id)
+    video = Content.get_video!(id, user)
     render(conn, "show.html", video: video)
   end
 
   def edit(conn, %{"id" => id}, user) do
-    video = Content.get_video!(id)
+    video = Content.get_video!(id, user)
     changeset = Content.change_video(video)
     render(conn, "edit.html", video: video, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "video" => video_params}, user) do
-    video = Content.get_video!(id)
+    video = Content.get_video!(id, user)
 
     case Content.update_video(video, video_params) do
       {:ok, video} ->
@@ -59,7 +59,7 @@ defmodule RumblWeb.VideoController do
   end
 
   def delete(conn, %{"id" => id}, user) do
-    video = Content.get_video!(id)
+    video = Content.get_video!(id, user)
     {:ok, _video} = Content.delete_video(video)
 
     conn

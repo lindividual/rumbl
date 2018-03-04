@@ -21,8 +21,8 @@ defmodule Rumbl.Content do
       [%Video{}, ...]
 
   """
-  def list_videos do
-    Repo.all(use_videos(user))
+  def list_videos(user) do
+    Repo.all(user_videos(user))
   end
 
   @doc """
@@ -39,7 +39,7 @@ defmodule Rumbl.Content do
       ** (Ecto.NoResultsError)
 
   """
-  def get_video!(videos, id), do: Repo.get!(user_videos(user), id)
+  def get_video!(id, user), do: Repo.get!(user_videos(user), id)
 
   @doc """
   Creates a video.
@@ -53,8 +53,9 @@ defmodule Rumbl.Content do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_video(attrs \\ %{}) do
-    %Video{}
+  def create_video(attrs \\ %{}, user) do
+    user
+    |> Ecto.build_assoc(:videos)
     |> Video.changeset(attrs)
     |> Repo.insert()
   end
@@ -71,7 +72,7 @@ defmodule Rumbl.Content do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_video(%Video{} = video, attrs) do
+  def update_video(%Video{} = video, attrs, user) do
     video
     |> Video.changeset(attrs)
     |> Repo.update()
