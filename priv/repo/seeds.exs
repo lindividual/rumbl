@@ -9,3 +9,8 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+alias Rumbl.Content.Category
+
+for category <- ~w(动画 日剧 科技 设计) do
+    Rumbl.Repo.insert!(%Category{name: category})
+end
