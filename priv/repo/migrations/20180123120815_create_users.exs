@@ -10,5 +10,6 @@ defmodule Rumbl.Repo.Migrations.CreateUsers do
       timestamps()
     end
 
+    create unique_index(:categories, [:name])  
   end
 end

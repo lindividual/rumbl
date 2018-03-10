@@ -1,6 +1,7 @@
 defmodule Rumbl.Content.Category do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
   alias Rumbl.Content.Category
 
   schema "categories" do
